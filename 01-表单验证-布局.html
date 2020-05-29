@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		.zs-login{
+			width: 500px;
+			margin:100px auto;
+			background: pink;
+			padding:10px;
+		}
+		.zs-login span.zs-qx{
+			display: inline-block;
+			margin-right: 10px;
+		}
+		.zs-login i{
+			display: inline-block;
+			width: 100px;
+			height: 40px;
+			line-height: 40px;
+			text-align: center;
+			background: #eee;
+			letter-spacing: 5px;
+			font-size: 20px;
+		}
+		.zs-login span{
+			color: red;
+			/*display: none;*/
+		}
+	</style>
+</head>
+<body>
+	<div class="zs-login">
+		<form action="https://www.xiaoze.com">
+			<p>
+				用户名：<input type="text"><span></span>
+			</p>
+			<p>
+				密码：<input type="password" ><strong class="zs-qx">切换</strong><span></span>
+			</p>
+			<p>
+				验证码：<input type="text"><i>9016</i><span></span>
+			</p>
+			<input type="submit" value="登录">
+		</form>
+	</div>
+</body>
+</html>
+<script type="text/javascript" src = "js/jquery-3.4.1.js"></script>
+<script>
+	//5.登录时，验证
+	$("[type=submit]").click(function(e){
+		e.preventDefault();//阻止默认事件
+		//1.判断用户名是否合法
+		var zsName = $('input:eq(0)').val().trim();
+		var zsPatt = /^0?1(3|4|5|6|7|8|9)[0-9]{9}$/; 
+		var zsRes = zsPatt.test(zsName);
+		if(!zsRes){
+			$('input:eq(0)').next().html('用户名错误');
+			return false;	
+		}else{
+			$('input:eq(0)').next().html('正确').css('color','green');
+		}
+
+		//2.判断密码是否合法
+		var zsName = $('input:eq(1)').val().trim();
+		var zsPatt = /^.{6,}$/; 
+		var zsRes = zsPatt.test(zsName);
+		if(!zsRes){
+			$('input:eq(1)').next().next().html('密码错误');
+			return false;	
+		}else{
+			$('input:eq(1)').next().next().html('正确').css('color','green');
+		}
+		//2.判断验证码是否合法
+		var zsName = $('input:eq(2)').val().trim().toLowerCase();
+		var zsI = $('i').html().trim().toLowerCase();
+		if(zsName != zsI){
+			$('input:eq(2)').next().next().html('验证码错误');
+			return false;	
+		}else{
+			$('input:eq(2)').next().next().html('正确').css('color','green');
+		}
+
+		window.location.href="https://www.kengniyidian.com";
+
+	})
+
+	//4.失去光标时，判断用户名，密码，验证码是否为空，提示不能为空
+	$('input:eq(0)').blur(function(){
+		var zsStr = $(this).val().trim();
+		if(zsStr == ""){
+			$(this).next().html('用户名不能为空');
+		}
+	})
+	$('input:eq(1)').blur(function(){
+		var zsStr = $(this).val().trim();
+		if(zsStr == ""){
+			$(this).nextAll('span').html('密码不能为空');
+		}
+	})
+	$('input:eq(2)').blur(function(){
+		var zsStr = $(this).val().trim();
+		if(zsStr == ""){
+			$(this).nextAll('span').html('验证码不能为空');
+		}
+	})
+	//3.密码名文和密文切换
+	$('.zs-qx').click(function(){
+		//1.获取type的属性值
+		var zsTyp = $(this).prev().attr('type');
+		// console.log(zsTyp);
+		if(zsTyp == "password"){
+			$(this).prev().attr('type','text');
+		}else{
+			$(this).prev().attr('type','password');
+		}
+	})
+
+
+	//2.页面加载之后，切换验证码
+	var zsCode = zsCreateCode();
+	$('.zs-login i').html(zsCode);
+	//1.点击，切换验证码
+	$('.zs-login i').click(function(){
+		var zsCode = zsCreateCode();
+		$(this).html(zsCode);
+	})
+
+
+	//定义一个生成随机验证码
+	function zsCreateCode(){
+		var zsNum = 4;
+		var zsArr = [9,1,2,4,5,6,7,8,0,3];
+		// [0,9]  (0.0001,9.9999)
+		var zsStr = '';
+		for(var i=0;i<zsNum;i++){
+			var rand = parseInt(Math.random()*zsArr.length);
+			zsStr = zsStr + zsArr[rand];
+		}
+		return zsStr;
+	}
+	// console.log(zsCreateCode());
+</script>
